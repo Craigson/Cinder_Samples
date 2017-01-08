@@ -23,7 +23,7 @@ public:
 private:
     // Rest length and spring constant
     float mRestLength;
-    float k = 0.2;
+    float k = 0.9;
     float mDamping = 0.99;
     float mStrength = 0.1;
     

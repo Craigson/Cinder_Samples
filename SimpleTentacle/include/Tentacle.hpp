@@ -10,6 +10,7 @@
 
 #include "Particle.hpp"
 #include "Spring.hpp"
+#include "cinder/Perlin.h"
 
 typedef std::shared_ptr<class Tentacle>		TentacleRef;
 
@@ -38,5 +39,7 @@ private:
     std::vector< std::shared_ptr<Particle> >    mParticles;
     ci::vec3                                    mBase;
     ci::vec3                                    mHead;
+    cinder::Perlin                              mPerlin;
+    ci::vec3                                     mGravity;
     
 };

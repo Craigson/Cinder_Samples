@@ -31,6 +31,7 @@ public:
     void lock();
     void debug();
     void drawSphereOfInfluence();
+    void addToAcceleration(ci::vec3 acc);
     
     ci::vec3 mLocation;
     

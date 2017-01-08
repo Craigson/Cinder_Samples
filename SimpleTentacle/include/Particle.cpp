@@ -18,9 +18,9 @@ Particle::Particle( ci::vec3 location )
     mLocation = location;
     mAcceleration = ci::vec3(0.);
     mVelocity = ci::vec3(0.0);
-    mMass = 1000.0;
+    mMass = 500.0;
     mLocked = false;
-    mRadiusOfInfluence = 5.f;
+    mRadiusOfInfluence = 20.f;
 }
 
 void Particle::debug(){
@@ -51,14 +51,25 @@ void Particle::update()
 //    std::cout << "particle acc(after): " << mAcceleration << std::endl;
 }
 
+void Particle::addToAcceleration(ci::vec3 acc){
+    mAcceleration += acc;
+}
+
 void Particle::attract(ci::vec3 loc){
-    float dist = distance(mLocation,loc) * 0.01;
+    
+    float dist = distance(mLocation,loc);
+    float distForce = dist * 0.01;
+    
     ci::vec3 dir = mLocation - loc;
     dir = normalize(dir);
+    ci::vec3 force = distForce * dir;
     
-    ci::vec3 force = dist * dir;
+    std::cout << "dist: " << dist << std::endl;
     
-    applyForce(-force);
+    if (dist < mRadiusOfInfluence) {
+        applyForce(-force);
+        std::cout << "reaching! " << std::endl;
+    }
     
 }
 

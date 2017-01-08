@@ -9,11 +9,14 @@
 #include "Tentacle.hpp"
 
 
+
 Tentacle::Tentacle(){}
 
 Tentacle::~Tentacle(){}
 
 Tentacle::Tentacle(ci::vec3 base, ci::vec3 head, int numSprings){
+    
+    mGravity = ci::vec3(0.,-0.000005,0.);
     
     ci::vec3 dir = head - base; // direction from base to tip
     dir = normalize(dir); // normalize the direction
@@ -45,17 +48,6 @@ Tentacle::Tentacle(ci::vec3 base, ci::vec3 head, int numSprings){
     
     // create the springs
     
-//    Spring::Spring(std::shared_ptr<Particle> from,std::shared_ptr<Particle> to, float l)
-//    : mBaseRef(move(from)), mHeadRef(move(to)), mRestLength(l){}
-    
-//    for( auto iter = mParticles.begin(); iter != mParticles.end() - 1; ++iter )
-//    {
-//        
-//        SpringRef spring = Spring::create(std::move(*iter), std::move(*iter++), springLength);
-//        mSprings.push_back(spring);
-//        
-//    }
-    
     for (size_t i = 1; i < mParticles.size(); i ++)
     {
         std::cout << "prev: " << mParticles[i-1]->getLocation() << std::endl;
@@ -67,7 +59,7 @@ Tentacle::Tentacle(ci::vec3 base, ci::vec3 head, int numSprings){
     std::cout << "numSprings: " << mSprings.size() << std::endl;
     std::cout << "numPArticles: " << mParticles.size() << std::endl;
     
-    
+    mPerlin.setSeed( clock() );
     
 }
 
@@ -81,8 +73,23 @@ std::shared_ptr<Particle> Tentacle::getHead(){
 
 void Tentacle::update()
 {
+    float scale = 0.00005f;
+    float multi = 0.000001f;
+    
+    
     for (auto iter = mSprings.begin(); iter != mSprings.end(); ++iter){
+
         (*iter)->update();
+        
+    }
+    
+    for( auto iter = mParticles.begin(); iter != mParticles.end(); ++iter )
+    {
+        // current ( as if underwater )
+        (*iter)->addToAcceleration(mPerlin.dfBm( (*iter)->getLocation() * scale ) * multi);
+        
+        // gravity
+        // if ( (*iter)->getLocation().y > 3.) (*iter)->addToAcceleration(mGravity);
     }
 }
 

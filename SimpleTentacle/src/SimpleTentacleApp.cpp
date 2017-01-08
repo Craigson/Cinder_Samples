@@ -57,7 +57,7 @@ void SimpleTentacleApp::setup()
     
     mBase->lock();
     
-    mTentacle = Tentacle::create(vec3(2., 0., 0.), vec3(2.,12.,0.), 10);
+    mTentacle = Tentacle::create(vec3(2., 0., 0.), vec3(2.,12.,0.), 20);
     
 }
 
@@ -82,7 +82,7 @@ void SimpleTentacleApp::update()
 //    vec3 gravity = vec3( 0.0, -2.0, 0.0 );
     
     mParticle->moveRandomly();
-    mHead->attract(mParticle->getLocation());
+//    mHead->attract(mParticle->getLocation());
 //    mHead->debug();
     mSpring->update();
     
@@ -114,6 +114,8 @@ void SimpleTentacleApp::draw()
     }
     
     mParticle->display();
+//    mParticle->drawSphereOfInfluence();
+//    mTentacle->getHead()->drawSphereOfInfluence();
     
 ////    mParticle->drawSphereOfInfluence();
 //    mBase->display();
