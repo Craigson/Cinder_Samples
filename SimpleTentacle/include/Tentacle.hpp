@@ -11,6 +11,7 @@
 #include "Particle.hpp"
 #include "Spring.hpp"
 #include "cinder/Perlin.h"
+#include "Simplex.h"
 
 typedef std::shared_ptr<class Tentacle>		TentacleRef;
 
@@ -30,6 +31,8 @@ public:
     void update();
     void display();
     void reach(ci::vec3 attractor);
+    void createBody();
+    void updateBody();
     
     std::shared_ptr<Particle> getHead();
     
@@ -37,9 +40,16 @@ private:
     
     std::vector< std::shared_ptr<Spring> >      mSprings;
     std::vector< std::shared_ptr<Particle> >    mParticles;
+    std::vector<ci::vec3>                       mSplinePoints;
     ci::vec3                                    mBase;
     ci::vec3                                    mHead;
     cinder::Perlin                              mPerlin;
-    ci::vec3                                     mGravity;
+    ci::vec3                                    mGravity;
+    ci::gl::BatchRef                            mBody;
+    ci::Shape2d                                 mSectionShape;
+    
+    int                                         mNumSegments;
+    
+
     
 };

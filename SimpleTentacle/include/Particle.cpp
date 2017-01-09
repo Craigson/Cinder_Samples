@@ -18,7 +18,7 @@ Particle::Particle( ci::vec3 location )
     mLocation = location;
     mAcceleration = ci::vec3(0.);
     mVelocity = ci::vec3(0.0);
-    mMass = 500.0;
+    mMass = 200.0;
     mLocked = false;
     mRadiusOfInfluence = 20.f;
 }
@@ -58,17 +58,17 @@ void Particle::addToAcceleration(ci::vec3 acc){
 void Particle::attract(ci::vec3 loc){
     
     float dist = distance(mLocation,loc);
-    float distForce = dist * 0.01;
+    float distForce = dist * 0.05;
     
     ci::vec3 dir = mLocation - loc;
     dir = normalize(dir);
     ci::vec3 force = distForce * dir;
     
-    std::cout << "dist: " << dist << std::endl;
+//    std::cout << "dist: " << dist << std::endl;
     
     if (dist < mRadiusOfInfluence) {
         applyForce(-force);
-        std::cout << "reaching! " << std::endl;
+//        std::cout << "reaching! " << std::endl;
     }
     
 }
@@ -76,7 +76,7 @@ void Particle::attract(ci::vec3 loc){
 void Particle::moveRandomly()
 {
     mAcceleration = Simplex::curlNoise(mLocation);
-    mAcceleration /= 10000.;
+    mAcceleration /= 15000.;
     update();
 }
 
@@ -88,10 +88,7 @@ void Particle::lock()
 // Method to display
 void Particle::display()
 {
-    ci::gl::drawSphere(mLocation, .1);
-    
-    
-    
+    ci::gl::drawSphere(mLocation, .4);
 }
 
 void Particle::drawSphereOfInfluence(){

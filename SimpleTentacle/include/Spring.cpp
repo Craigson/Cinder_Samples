@@ -16,6 +16,31 @@ Spring::~Spring(){}
 // Calculate spring force
 void Spring::update() {
     
+    /*
+     // SHIFFMAN SPRINGS
+     
+    // Vector pointing from anchor to bob position
+    ci::vec3 force = mBaseRef->getLocation() - mHeadRef->getLocation();
+    // What is distance
+    float d = distance(mBaseRef->getLocation(),mHeadRef->getLocation());
+    // Stretch is difference between current distance and rest length
+    
+    float stretch = d - mRestLength;
+    
+    // Calculate force according to Hooke's Law
+    // F = k * stretch
+    force = normalize(force);
+    force *= (-1 * k * stretch);
+    
+    mBaseRef->applyForce( force );
+    mHeadRef->applyForce( -force );
+    
+    mBaseRef->update();
+    mHeadRef->update();
+    
+    */
+    
+    
     ci::vec3 deltaDir = mBaseRef->getLocation() - mHeadRef->getLocation();
     float length = distance(mBaseRef->getLocation(), mHeadRef->getLocation());
     
@@ -28,6 +53,7 @@ void Spring::update() {
     
     mBaseRef->update();
     mHeadRef->update();
+     
 }
 
 void Spring::display()

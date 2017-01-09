@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "cinder/Perlin.h"
+
 //create the object using a shared pointer for automatic memory management
 typedef std::shared_ptr<class Particle>		ParticleRef;
 

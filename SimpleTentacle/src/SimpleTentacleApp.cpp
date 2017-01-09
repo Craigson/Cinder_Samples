@@ -6,11 +6,15 @@
 #include "Spring.hpp"
 #include "Particle.hpp"
 #include "Tentacle.hpp"
+#include "cinder/Rand.h"
+#include "cinder/Utilities.h"
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+
+#define NUM_PARTICLES 10
 
 
 class SimpleTentacleApp : public App {
@@ -21,6 +25,7 @@ class SimpleTentacleApp : public App {
     void mouseDrag (MouseEvent event) override;
 	void update() override;
 	void draw() override;
+    void saveFrames();
     
     gl::BatchRef mPlane;
     
@@ -29,35 +34,40 @@ class SimpleTentacleApp : public App {
     
     vec2 mousePos;
     
-//    SpringRef mSpring;
-    
-    ParticleRef mParticle;
-    SpringRef   mSpring;
-    
-    ParticleRef    mBase, mHead;
+    // container to store the prey items
+    std::vector<ParticleRef> mParticles;
     
     TentacleRef     mTentacle;
+    
+    // create a struct for a light that contains the particle
+    
+    float rot = 0;
 };
 
 void SimpleTentacleApp::setup()
 {
     // Set up the camera.
-    mCam.lookAt( vec3( 0.0, 5.0f, 15.0f ), vec3( 0 ) );
+    mCam.lookAt( vec3( 0.0, 15.0f, 35.0f ), vec3( 0.,10.,0. ) );
     mCam.setPerspective( 60.0f, getWindowAspectRatio(), 0.01f, 1000.0f );
     mCamUi = CameraUi( &mCam, getWindow() );
     
     auto lambert = gl::getStockShader(gl::ShaderDef().color());
-    mPlane = gl::Batch::create( geom::Plane().size( vec2( 150 ) ).subdivisions( ivec2( 10 ) ), lambert );
+    mPlane = gl::Batch::create( geom::Plane().size( vec2( 60 ) ).subdivisions( ivec2( 20 ) ), lambert );
     
-    mParticle = Particle::create(vec3(0.,5.,0.));
+    for (size_t i = 0; i < NUM_PARTICLES; i++)
+    {
+        ParticleRef mParticle = Particle::create( vec3(randFloat(-15.f,15.f), randFloat(0.f,50.f), randFloat(-15.f,15.f)) );
+        mParticles.push_back(mParticle);
+    }
+    
+    /*
     mBase = Particle::create(vec3(0));
     mHead = Particle::create(vec3(2.,7.,-1.));
-    
     mSpring = Spring::create(mBase, mHead, 5.0);
-    
     mBase->lock();
+    */
     
-    mTentacle = Tentacle::create(vec3(2., 0., 0.), vec3(2.,12.,0.), 20);
+    mTentacle = Tentacle::create(vec3(0., 0., 0.), vec3(0.,50.,0.), 5);
     
 }
 
@@ -78,17 +88,18 @@ void SimpleTentacleApp::mouseDrag( MouseEvent event )
 
 void SimpleTentacleApp::update()
 {
-    // Apply a gravity force to the bob
-//    vec3 gravity = vec3( 0.0, -2.0, 0.0 );
-    
-    mParticle->moveRandomly();
-//    mHead->attract(mParticle->getLocation());
-//    mHead->debug();
-    mSpring->update();
-    
-    mTentacle->getHead()->attract(mParticle->getLocation());
-    mTentacle->update();
 
+    // make the tentacle check each object
+    for (auto iter = mParticles.begin(); iter != mParticles.end(); ++iter){
+        (*iter)->moveRandomly();
+        mTentacle->getHead()->attract((*iter)->getLocation());
+    }
+
+    mTentacle->update();
+    
+    cout << getAverageFps() << endl;
+    
+    rot += 0.0015;
 
 }
 
@@ -106,28 +117,34 @@ void SimpleTentacleApp::draw()
     
     gl::enableWireframe();
     
+    gl::rotate(angleAxis(rot,vec3(0.,1.,0)));
+    
     // draw the plane
     // Draw the grid on the floor.
     {
-        gl::ScopedColor color( Color::gray( 0.7f ) );
+        ci::gl::ScopedColor color( ci::ColorAf( 1., 1., 1.,0.2 ) );
         mPlane->draw();
     }
     
-    mParticle->display();
-//    mParticle->drawSphereOfInfluence();
-//    mTentacle->getHead()->drawSphereOfInfluence();
+    // draw each prey object
+    for (auto iter = mParticles.begin(); iter != mParticles.end(); ++iter){
+        ci::gl::ScopedColor color( ci::Color( 1., 0., 0. ) );
+        (*iter)->display();
+    }
     
-////    mParticle->drawSphereOfInfluence();
-//    mBase->display();
-//    mHead->display();
-//    mSpring->display();
-    
+    ci::gl::ScopedColor color( ci::Color( 1., 1., 1. ) );
     mTentacle->display();
+    
+//    saveFrames();
 
 }
 
-CINDER_APP( SimpleTentacleApp, RendererGl, []( App::Settings* settings ) {
-    settings->setWindowSize( 1024, 768 );
+void SimpleTentacleApp::saveFrames(){
+    if (getElapsedFrames() < 1800 && getElapsedFrames()%2==0) writeImage( getDocumentsDirectory() / "ITP" / "Residency"/ "Tentacle_Render" / ("000" + toString( getElapsedFrames() ) + ".jpg" ), copyWindowSurface() );
+}
+
+CINDER_APP( SimpleTentacleApp, RendererGl(RendererGl::Options().msaa( 4 )), []( App::Settings* settings ) {
+    settings->setWindowSize( 960, 720 );
     //    settings->setHighDensityDisplayEnabled();
 });
 

@@ -5,7 +5,7 @@
 #include "cinder/Utilities.h"
 #include "cinder/qtime/AvfWriter.h"
 
-#define DAY 5
+#define DAY 6
 #define BIT_RATE 5000000
 #define NUM_FRAMES 60
 
@@ -42,9 +42,9 @@ void EverydaysApp::setup()
     setFrameRate(30.f);
     
     // load the shaders
-    mGlsl = gl::GlslProg::create(loadAsset("vertex.vert"), loadAsset("5_hsbshape2.frag"));
+    mGlsl = gl::GlslProg::create(loadAsset("vertex.vert"), loadAsset("6_polarshape.frag"));
     
-//    setupMovie();
+    setupMovie();
 }
 
 void EverydaysApp::mouseDown( MouseEvent event )
@@ -53,7 +53,7 @@ void EverydaysApp::mouseDown( MouseEvent event )
 
 void EverydaysApp::update()
 {
-//     recordMovie();
+     recordMovie();
     
     timeCount += 0.0523;
 }
