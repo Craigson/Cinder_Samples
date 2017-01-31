@@ -58,6 +58,6 @@ void Spring::update() {
 
 void Spring::display()
 {
-    gl::color( Color::white() );
+    gl::color( ColorAf(1.,1.,1.,1.) );
     gl::drawLine(mBaseRef->getLocation(), mHeadRef->getLocation());
 }

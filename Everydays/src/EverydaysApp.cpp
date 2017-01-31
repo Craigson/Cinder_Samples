@@ -5,7 +5,7 @@
 #include "cinder/Utilities.h"
 #include "cinder/qtime/AvfWriter.h"
 
-#define DAY 6
+#define DAY 16
 #define BIT_RATE 5000000
 #define NUM_FRAMES 60
 
@@ -17,6 +17,7 @@ class EverydaysApp : public App {
   public:
 	void setup() override;
 	void mouseDown( MouseEvent event ) override;
+    void keyDown ( KeyEvent event) override;
 	void update() override;
 	void draw() override;
     void cleanup() override { mMovieExporter.reset(); }
@@ -30,6 +31,8 @@ class EverydaysApp : public App {
     int frameCount;
     float timeCount;
     
+    bool reverse;
+    
     gl::GlslProgRef     mGlsl;
 
 };
@@ -42,9 +45,14 @@ void EverydaysApp::setup()
     setFrameRate(30.f);
     
     // load the shaders
-    mGlsl = gl::GlslProg::create(loadAsset("vertex.vert"), loadAsset("6_polarshape.frag"));
+    mGlsl = gl::GlslProg::create(loadAsset("vertex.vert"), loadAsset("16_pattern.frag"));
     
-    setupMovie();
+    reverse = false;
+//    setupMovie();
+}
+
+void EverydaysApp::keyDown( KeyEvent event){
+    if( event.getChar() == 'r' ) reverse = !reverse;
 }
 
 void EverydaysApp::mouseDown( MouseEvent event )
@@ -53,7 +61,7 @@ void EverydaysApp::mouseDown( MouseEvent event )
 
 void EverydaysApp::update()
 {
-     recordMovie();
+//     recordMovie();
     
     timeCount += 0.0523;
 }
@@ -63,6 +71,7 @@ void EverydaysApp::draw()
     gl::ScopedGlslProg glslScp( mGlsl );
     mGlsl->uniform("uResolution", vec2(getWindowWidth(), getWindowHeight()));
     mGlsl->uniform("uTime", timeCount);
+    mGlsl->uniform("uReverse", reverse);
     gl::drawSolidRect( getWindowBounds() );
  
 //    recordGif();
@@ -81,7 +90,7 @@ void EverydaysApp::setupMovie()
 }
 void EverydaysApp::recordMovie()
 {
-    const int maxFrames = 300;
+    const int maxFrames = 450;
     if( mMovieExporter && getElapsedFrames() > 1 && getElapsedFrames() < maxFrames )
         mMovieExporter->addFrame( copyWindowSurface() );
     else if( mMovieExporter && getElapsedFrames() >= maxFrames ) {
@@ -93,7 +102,7 @@ void EverydaysApp::recordMovie()
 
 void EverydaysApp::recordGif()
 {
-    if (getElapsedFrames() % 4 == 0 && frameCount < 121 ) {
+    if (getElapsedFrames() % 4 == 0 && frameCount < 35 ) {
         writeImage( getDocumentsDirectory() / "ITP" / "Residency"/ "100days_2017" / toString(DAY) / ((toString(DAY)) + ("_0") + toString( frameCount ) + ".jpg" ), copyWindowSurface() );
         frameCount++;
     }

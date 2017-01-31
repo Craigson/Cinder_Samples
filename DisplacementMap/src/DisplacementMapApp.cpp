@@ -72,7 +72,7 @@ void DisplacementMapApp::update()
     }
     
     // update the texture with the new values
-    mTex->update( data, GL_RED, GL_UNSIGNED_BYTE, 0, TEX_SIZE, TEX_SIZE, ivec2(0,0) );
+//    mTex->update( data, GL_RED, GL_UNSIGNED_BYTE, 0, TEX_SIZE, TEX_SIZE, ivec2(0,0) );
     
 }
 
@@ -99,7 +99,7 @@ void DisplacementMapApp::draw()
     gl::setMatricesWindow( getWindowSize() );
     
     // disable wireframe view
-    gl::setWireframeEnabled(false);
+//    gl::setWireframeEnabled();
 
     // draw the noise texture to the screen
     Rectf drawRect( 0, 0, mTex->getWidth(),mTex->getHeight());

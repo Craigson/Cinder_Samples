@@ -2,6 +2,7 @@
 
 // these are from the programmable pipeline system
 uniform mat4 ciModelViewProjection;
+
 in vec4 ciPosition;
 in vec2	ciTexCoord0;
 

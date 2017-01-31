@@ -135,7 +135,7 @@ void Tentacle::update()
         } 
     }
     
-//    updateBody();
+    updateBody();
     
 }
 
@@ -168,11 +168,11 @@ void Tentacle::display(){
 //    {
 //        (*iter)->display();
 //    }
-//    
-    for (auto iter = mSprings.begin(); iter != mSprings.end(); ++iter){
-        (*iter)->display();
-    }
+//
+//    for (auto iter = mSprings.begin(); iter != mSprings.end(); ++iter){
+//        (*iter)->display();
+//    }
     
     // draw the skin
-//    mBody->draw();
+    mBody->draw();
 }

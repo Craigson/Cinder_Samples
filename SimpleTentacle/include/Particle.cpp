@@ -18,9 +18,9 @@ Particle::Particle( ci::vec3 location )
     mLocation = location;
     mAcceleration = ci::vec3(0.);
     mVelocity = ci::vec3(0.0);
-    mMass = 200.0;
+    mMass = 500.0;
     mLocked = false;
-    mRadiusOfInfluence = 20.f;
+    mRadiusOfInfluence = 50.f;
 }
 
 void Particle::debug(){
@@ -46,6 +46,12 @@ void Particle::update()
         mAcceleration = ci::vec3(0.);
 //        mVelocity *= (1.0 - mDamp);
     }
+    
+    // keep particles within bounding box
+    if (mLocation.x > 50 || mLocation.x < - 50) mVelocity.x *= -1;
+    if (mLocation.y > 50 || mLocation.y < - 50) mVelocity.y *= -1;
+    if (mLocation.z > 50 || mLocation.z < - 50) mVelocity.z *= -1;
+    
 
     
 //    std::cout << "particle acc(after): " << mAcceleration << std::endl;
@@ -58,7 +64,7 @@ void Particle::addToAcceleration(ci::vec3 acc){
 void Particle::attract(ci::vec3 loc){
     
     float dist = distance(mLocation,loc);
-    float distForce = dist * 0.05;
+    float distForce = dist * 0.01;
     
     ci::vec3 dir = mLocation - loc;
     dir = normalize(dir);
@@ -88,7 +94,7 @@ void Particle::lock()
 // Method to display
 void Particle::display()
 {
-    ci::gl::drawSphere(mLocation, .4);
+    ci::gl::drawSphere(mLocation, .2);
 }
 
 void Particle::drawSphereOfInfluence(){
